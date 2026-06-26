@@ -1,0 +1,30 @@
+[
+  {
+    "unidade": "Lins",
+    "respondente": "Alexandre Brasil",
+    "cargo": "Gerente de produção",
+    "data": "2026-06-26",
+    "obs": "",
+    "respostas": {
+      "GRO": 0,
+      "PQFL": 0,
+      "SIM": 0,
+      "ZAT": 1,
+      "QUALITY": 2,
+      "ESSENCIA": 1,
+      "IND_DIR": 0,
+      "INOVAT": 1,
+      "BELTS": 2,
+      "5S": 0,
+      "MC": 2,
+      "DIGITAL": 1,
+      "IND_TRANS": 2,
+      "CULTURA": 1,
+      "UNIVT": 1,
+      "COM": 2,
+      "PDL": 1,
+      "IND_CULT": 2
+    },
+    "timestamp": "2026-06-26T18:21:31.278Z"
+  }
+]
