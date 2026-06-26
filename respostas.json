@@ -2,7 +2,7 @@
   {
     "unidade": "Lins",
     "respondente": "Alexandre Brasil",
-    "cargo": "Gerente de produÃ§Ã£o",
+    "cargo": "Gerente de produÃÂ§ÃÂ£o",
     "data": "2026-06-26",
     "obs": "",
     "respostas": {
@@ -26,33 +26,5 @@
       "IND_CULT": 2
     },
     "timestamp": "2026-06-26T18:21:31.278Z"
-  },
-  {
-    "unidade": "Tiros",
-    "respondente": "",
-    "cargo": "",
-    "data": "2026-06-26",
-    "obs": "",
-    "respostas": {
-      "GRO": 0,
-      "PQFL": 1,
-      "SIM": 1,
-      "ZAT": 1,
-      "QUALITY": 1,
-      "ESSENCIA": 2,
-      "IND_DIR": 1,
-      "INOVAT": 2,
-      "BELTS": 1,
-      "5S": 2,
-      "MC": 2,
-      "DIGITAL": 1,
-      "IND_TRANS": 2,
-      "CULTURA": 2,
-      "UNIVT": 2,
-      "COM": 1,
-      "PDL": 2,
-      "IND_CULT": 2
-    },
-    "timestamp": "2026-06-26T18:28:58.313Z"
   }
 ]
