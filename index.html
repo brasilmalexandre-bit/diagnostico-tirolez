@@ -527,11 +527,20 @@ function mostrarAlerta(tela,msg,tipo){
 }
 function limparAlerta(tela){const el=document.getElementById("alerta-"+tela);if(el)el.innerHTML="";}
 
-cfg={user:"brasilmalexandre-bit",repo:"diagnostico-tirolez",token:"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"};
-localStorage.setItem("tirolez_cfg",JSON.stringify(cfg));
+// Carregar config salva no navegador
+const _s = localStorage.getItem("tirolez_cfg");
+if(_s){ cfg=JSON.parse(_s); }
+// Pré-preencher usuário e repositório fixos (sem token)
+if(!cfg.user) cfg.user = "brasilmalexandre-bit";
+if(!cfg.repo) cfg.repo  = "diagnostico-tirolez";
+// Pré-preencher campos de config
+document.getElementById("cfg-user").value = cfg.user;
+document.getElementById("cfg-repo").value = cfg.repo;
+if(cfg.token) document.getElementById("cfg-token").value = cfg.token;
 gerarFormulario();
 document.getElementById("f-data").value=new Date().toISOString().slice(0,10);
-irPara("form");
+// Ir direto ao formulário se já tiver token salvo, senão config
+if(cfg.token) irPara("form"); else irPara("config");
 </script>
 </body>
 </html>
