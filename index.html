@@ -206,36 +206,10 @@ footer .ft-proj{font-size:10px;color:#2A2A2A}
     <button class="nav-btn" id="nav-form"      onclick="irPara('form')">Formulário</button>
     <button class="nav-btn" id="nav-painel"    onclick="irPara('painel')">Painel</button>
     <button class="nav-btn" id="nav-respostas" onclick="irPara('respostas')">Respostas</button>
-    <button class="nav-btn" id="nav-config"    onclick="irPara('config')">⚙</button>
   </div>
 </header>
 
-<!-- CONFIG -->
-<div id="tela-config" class="tela">
-  <div style="max-width:560px;margin:44px auto;padding:0 16px 60px">
-    <div class="card">
-      <h2>Configuração do repositório</h2>
-      <p class="sub">Configure uma vez. As respostas serão salvas automaticamente no GitHub.</p>
-      <div id="alerta-config"></div>
-      <div class="field"><label>Usuário GitHub</label><input type="text" id="cfg-user" placeholder="ex: produttare"></div>
-      <div class="field"><label>Nome do repositório</label><input type="text" id="cfg-repo" placeholder="ex: diagnostico-tirolez"></div>
-      <div class="field">
-        <label>Personal Access Token</label>
-        <input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-        <div class="hint">Token com permissão <code>Contents: Read and write</code></div>
-      </div>
-      <div class="btn-row">
-        <button class="btn" onclick="salvarConfig()">Salvar</button>
-        <button class="btn btn-sec" onclick="testarConexao()">Testar conexão</button>
-      </div>
-      <div class="steps">
-        <h3>Como criar o token</h3>
-        <div class="step"><div class="step-n">1</div><p>GitHub → <code>Settings → Developer settings → Fine-grained tokens → Generate new token</code></p></div>
-        <div class="step"><div class="step-n">2</div><p>Selecione o repositório e marque <code>Contents: Read and write</code>.</p></div>
-        <div class="step"><div class="step-n">3</div><p>Gere, copie e cole acima. O token aparece apenas uma vez.</p></div>
-        <div class="step"><div class="step-n">4</div><p>Salve e clique em <strong>Testar conexão</strong> para confirmar.</p></div>
-      </div>
-    </div>
+
   </div>
 </div>
 
@@ -359,7 +333,7 @@ const BLOCOS=[
 ];
 const TODOS_PROGS=BLOCOS.flatMap(b=>b.progs);
 const ESCALA=["Não existe","Iniciando","Em desenvolvimento","Consolidado"];
-let cfg={},dados=[],radarI=null,barI=null;
+let dados=[],radarI=null,barI=null;
 
 function irPara(tela){
   document.querySelectorAll(".tela").forEach(el=>el.classList.remove("ativa"));
@@ -371,43 +345,9 @@ function irPara(tela){
   if(tela==="respostas")renderRespostas();
 }
 
-function salvarConfig(){
-  cfg={user:document.getElementById("cfg-user").value.trim(),repo:document.getElementById("cfg-repo").value.trim(),token:document.getElementById("cfg-token").value.trim()};
-  if(!cfg.user||!cfg.repo||!cfg.token){mostrarAlerta("config","Preencha todos os campos.","erro");return;}
-  localStorage.setItem("tirolez_cfg",JSON.stringify(cfg));
-  mostrarAlerta("config","Configuração salva com sucesso!","ok");
-}
-async function testarConexao(){
-  salvarConfig();if(!cfg.token)return;
-  try{const r=await githubGet("repos/"+cfg.user+"/"+cfg.repo);if(r.id)mostrarAlerta("config","Conexão OK — repositório \""+r.full_name+"\" acessível.","ok");else throw new Error("Repositório não encontrado.");}
-  catch(e){mostrarAlerta("config","Erro: "+e.message,"erro");}
-}
-function carregarConfig(){
-  const s=localStorage.getItem("tirolez_cfg");if(!s)return;
-  cfg=JSON.parse(s);
-  document.getElementById("cfg-user").value=cfg.user||"";
-  document.getElementById("cfg-repo").value=cfg.repo||"";
-  document.getElementById("cfg-token").value=cfg.token||"";
-}
 
-async function githubGet(path){
-  const r=await fetch("https://api.github.com/"+path,{headers:{Authorization:"token "+cfg.token,Accept:"application/vnd.github.v3+json"}});
-  if(!r.ok)throw new Error("GitHub "+r.status+": "+r.statusText);
-  return r.json();
-}
-async function githubGetFile(fn){
-  try{
-    const r=await fetch("https://api.github.com/repos/"+cfg.user+"/"+cfg.repo+"/contents/"+fn,{headers:{Authorization:"token "+cfg.token,Accept:"application/vnd.github.v3+json"}});
-    if(r.status===404)return null;if(!r.ok)throw new Error("GitHub "+r.status);
-    const j=await r.json();return{content:JSON.parse(atob(j.content)),sha:j.sha};
-  }catch(e){return null;}
-}
-async function githubSaveFile(fn,content,sha){
-  const body={message:"Resposta diagnóstico — "+new Date().toISOString(),content:btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2)))),...(sha?{sha}:{})};
-  const r=await fetch("https://api.github.com/repos/"+cfg.user+"/"+cfg.repo+"/contents/"+fn,{method:"PUT",headers:{Authorization:"token "+cfg.token,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},body:JSON.stringify(body)});
-  if(!r.ok){const e=await r.json();throw new Error(e.message||r.statusText);}
-  return r.json();
-}
+
+
 
 function gerarFormulario(){
   const c=document.getElementById("blocos-programas");c.innerHTML="";
@@ -437,37 +377,36 @@ async function enviarForm(){
     if(el)respostas[p.id]=parseInt(el.value);else faltando.push(p.label);
   });
   if(faltando.length){mostrarAlerta("form","Preencha todos os programas. Faltando: "+faltando.slice(0,3).join(", ")+(faltando.length>3?" e mais…":"")+".", "erro");return;}
-  if(!cfg.token){mostrarAlerta("form","Configure o repositório GitHub antes de enviar (⚙).","erro");return;}
   const btn=document.getElementById("btn-submit");btn.disabled=true;btn.textContent="Enviando…";
+  const payload={unidade,respondente:document.getElementById("f-respondente").value.trim(),cargo:document.getElementById("f-cargo").value.trim(),data:document.getElementById("f-data").value||new Date().toISOString().slice(0,10),obs:document.getElementById("f-obs").value.trim(),respostas,timestamp:new Date().toISOString()};
   try{
-    const arq=await githubGetFile("respostas.json");
-    const lista=arq?arq.content:[];const sha=arq?arq.sha:null;
-    const idx=lista.findIndex(r=>r.unidade===unidade);
-    const nova={unidade,respondente:document.getElementById("f-respondente").value.trim(),cargo:document.getElementById("f-cargo").value.trim(),data:document.getElementById("f-data").value||new Date().toISOString().slice(0,10),obs:document.getElementById("f-obs").value.trim(),respostas,timestamp:new Date().toISOString()};
-    if(idx>=0)lista[idx]=nova;else lista.push(nova);
-    await githubSaveFile("respostas.json",lista,sha);
-    dados=lista;
-    mostrarAlerta("form","Diagnóstico da unidade <strong>"+unidade+"</strong> enviado com sucesso!","ok");
-    document.getElementById("form-assessment").reset();
-    document.getElementById("f-data").value=new Date().toISOString().slice(0,10);
-    atualizarProgresso();
-    btn.textContent="Enviar diagnóstico";btn.disabled=false;
-  }catch(e){mostrarAlerta("form","Erro ao salvar: "+e.message,"erro");btn.textContent="Enviar diagnóstico";btn.disabled=false;}
+    const r=await fetch("https://script.google.com/macros/s/AKfycbyvObCEirKni1iLxI1DbB17hgz-k63wiCPCftuVc3MM4xWM9DoxYoiLJqLJZfaZKND4lg/exec",{method:"POST",body:JSON.stringify(payload)});
+    const j=await r.json();
+    if(j.status==="ok"){
+      mostrarAlerta("form","Diagnóstico da unidade <strong>"+unidade+"</strong> enviado com sucesso!","ok");
+      document.getElementById("form-assessment").reset();
+      document.getElementById("f-data").value=new Date().toISOString().slice(0,10);
+      atualizarProgresso();
+    }else{throw new Error(j.msg||"Erro desconhecido");}
+  }catch(e){mostrarAlerta("form","Erro ao enviar: "+e.message,"erro");}
+  btn.textContent="Enviar diagnóstico";btn.disabled=false;
 }
 
 async function carregarDados(){
-  if(!cfg.token){mostrarAlerta("painel","Configure o repositório GitHub (⚙).","info");return;}
+  mostrarAlerta("painel","Carregando dados…","info");
   try{
-    const arq=await githubGetFile("respostas.json");
-    dados=arq?arq.content:[];
-    if(!dados.length){mostrarAlerta("painel","Nenhuma resposta recebida ainda.","info");return;}
+    const SHEETS_URL="https://script.google.com/macros/s/AKfycbyvObCEirKni1iLxI1DbB17hgz-k63wiCPCftuVc3MM4xWM9DoxYoiLJqLJZfaZKND4lg/exec?action=getData";
+    const r=await fetch(SHEETS_URL);
+    const j=await r.json();
+    if(!j.dados||!j.dados.length){mostrarAlerta("painel","Nenhuma resposta recebida ainda.","info");return;}
+    dados=j.dados;
     limparAlerta("painel");
     const unidades=[...new Set(dados.map(d=>d.unidade))].sort();
     const sel=document.getElementById("fil-unidade");
     sel.innerHTML="<option value='todas'>Todas</option>";
     unidades.forEach(u=>{const o=document.createElement("option");o.value=u;o.textContent=u;sel.appendChild(o);});
     renderPainel();
-  }catch(e){mostrarAlerta("painel","Erro: "+e.message,"erro");}
+  }catch(e){mostrarAlerta("painel","Erro ao carregar dados: "+e.message,"erro");}
 }
 function dFilt(){const u=document.getElementById("fil-unidade").value;return u==="todas"?dados:dados.filter(d=>d.unidade===u);}
 function pFilt(){const b=document.getElementById("fil-bloco").value;return b==="todos"?TODOS_PROGS:BLOCOS[+b].progs;}
@@ -517,8 +456,12 @@ function renderRespostas(){
 }
 async function deletarResposta(idx){
   if(!confirm("Remover resposta da unidade \""+dados[idx].unidade+"\"?"))return;
-  const arq=await githubGetFile("respostas.json");if(!arq)return;
-  dados.splice(idx,1);await githubSaveFile("respostas.json",dados,arq.sha);renderRespostas();
+  try{
+    const r=await fetch("https://script.google.com/macros/s/AKfycbyvObCEirKni1iLxI1DbB17hgz-k63wiCPCftuVc3MM4xWM9DoxYoiLJqLJZfaZKND4lg/exec",{method:"POST",body:JSON.stringify({action:"delete",unidade:dados[idx].unidade})});
+    const j=await r.json();
+    if(j.status==="ok"){dados.splice(idx,1);renderRespostas();}
+    else throw new Error(j.msg);
+  }catch(e){alert("Erro ao remover: "+e.message);}
 }
 
 function mostrarAlerta(tela,msg,tipo){
@@ -527,20 +470,9 @@ function mostrarAlerta(tela,msg,tipo){
 }
 function limparAlerta(tela){const el=document.getElementById("alerta-"+tela);if(el)el.innerHTML="";}
 
-// Carregar config salva no navegador
-const _s = localStorage.getItem("tirolez_cfg");
-if(_s){ cfg=JSON.parse(_s); }
-// Pré-preencher usuário e repositório fixos (sem token)
-if(!cfg.user) cfg.user = "brasilmalexandre-bit";
-if(!cfg.repo) cfg.repo  = "diagnostico-tirolez";
-// Pré-preencher campos de config
-document.getElementById("cfg-user").value = cfg.user;
-document.getElementById("cfg-repo").value = cfg.repo;
-if(cfg.token) document.getElementById("cfg-token").value = cfg.token;
 gerarFormulario();
 document.getElementById("f-data").value=new Date().toISOString().slice(0,10);
-// Ir direto ao formulário se já tiver token salvo, senão config
-if(cfg.token) irPara("form"); else irPara("config");
+irPara("form");
 </script>
 </body>
 </html>
