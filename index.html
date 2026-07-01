@@ -131,6 +131,13 @@ header{
   color:#ccc;transition:border-color .15s;
 }
 .obs-field textarea:focus{outline:none;border-color:var(--laranja)}
+.prog-obs textarea{
+  width:100%;background:#0D0D0D;border:1px solid #1E1E1E;border-radius:var(--rad);
+  padding:7px 10px;font-size:11px;font-family:inherit;resize:none;min-height:48px;
+  color:#888;transition:border-color .15s;margin-top:8px;
+}
+.prog-obs textarea:focus{outline:none;border-color:var(--laranja);color:#ccc}
+.prog-obs textarea::placeholder{color:#333}
 
 .progresso{height:2px;background:#1E1E1E;border-radius:2px;margin-bottom:16px}
 .progresso-bar{height:100%;background:var(--laranja);border-radius:2px;transition:width .3s}
@@ -378,13 +385,16 @@ async function enviarForm(){
   });
   if(faltando.length){mostrarAlerta("form","Preencha todos os programas. Faltando: "+faltando.slice(0,3).join(", ")+(faltando.length>3?" e mais…":"")+".", "erro");return;}
   const btn=document.getElementById("btn-submit");btn.disabled=true;btn.textContent="Enviando…";
-  const payload={unidade,respondente:document.getElementById("f-respondente").value.trim(),cargo:document.getElementById("f-cargo").value.trim(),data:document.getElementById("f-data").value||new Date().toISOString().slice(0,10),obs:document.getElementById("f-obs").value.trim(),respostas,timestamp:new Date().toISOString()};
+  const obsProgs={};
+  TODOS_PROGS.forEach(p=>{const el=document.getElementById("obs_"+p.id);if(el&&el.value.trim())obsProgs[p.id]=el.value.trim();});
+  const payload={unidade,respondente:document.getElementById("f-respondente").value.trim(),cargo:document.getElementById("f-cargo").value.trim(),data:document.getElementById("f-data").value||new Date().toISOString().slice(0,10),obs:document.getElementById("f-obs").value.trim(),obsProgs,respostas,timestamp:new Date().toISOString()};
   try{
     const r=await fetch("https://script.google.com/macros/s/AKfycbyvObCEirKni1iLxI1DbB17hgz-k63wiCPCftuVc3MM4xWM9DoxYoiLJqLJZfaZKND4lg/exec",{method:"POST",body:JSON.stringify(payload)});
     const j=await r.json();
     if(j.status==="ok"){
       mostrarAlerta("form","Diagnóstico da unidade <strong>"+unidade+"</strong> enviado com sucesso!","ok");
       document.getElementById("form-assessment").reset();
+      TODOS_PROGS.forEach(p=>{const el=document.getElementById("obs_"+p.id);if(el)el.value="";});
       document.getElementById("f-data").value=new Date().toISOString().slice(0,10);
       atualizarProgresso();
     }else{throw new Error(j.msg||"Erro desconhecido");}
