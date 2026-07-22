@@ -219,8 +219,8 @@ footer .ft-proj{font-size:10px;color:#2A2A2A}
   </div>
   <div class="nav-btns">
     <button class="nav-btn" id="nav-form"      onclick="irPara('form')">Formulário</button>
-    <button class="nav-btn" id="nav-painel"    onclick="irPara('painel')">Painel</button>
-    <button class="nav-btn" id="nav-respostas" onclick="irPara('respostas')">Respostas</button>
+    <button class="nav-btn" id="nav-painel"    onclick="acessarRestrito('painel')">Painel</button>
+    <button class="nav-btn" id="nav-respostas" onclick="acessarRestrito('respostas')">Respostas</button>
   </div>
 </header>
 
@@ -382,6 +382,11 @@ const ESCALA=["Não existe","Iniciando","Em desenvolvimento","Consolidado"];
 let dados=[],respostasIndividuais=[],radarI=null,barI=null;
 
 function irPara(tela){
+  // Proteger painel e respostas — redirecionar para senha se não autenticado
+  if((tela==="painel"||tela==="respostas")&&!estaAutenticado()){
+    _telaPendente=tela;
+    tela="senha";
+  }
   document.querySelectorAll(".tela").forEach(el=>el.classList.remove("ativa"));
   const el=document.getElementById("tela-"+tela);
   if(el) el.classList.add("ativa");
