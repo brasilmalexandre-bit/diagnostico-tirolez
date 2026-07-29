@@ -357,24 +357,22 @@ footer .ft-proj{font-size:10px;color:#2A2A2A}
 <script>
 const BLOCOS=[
   {nome:"Programas Direcionados",progs:[
-    {id:"GRO",     label:"GRO — Gestão da Rotina Operacional",           desc:"Reuniões estruturadas, quadros de gestão à vista, acompanhamento de indicadores."},
-    {id:"SIM",     label:"SIM — Sistema de Indicadores e Metas",          desc:"Indicadores formalizados, desdobrados por nível, com metas e acompanhamento sistemático."},
-    {id:"ZAT",     label:"ZAT — Zero Acidente de Trabalho",               desc:"Segurança estruturada, análise de ocorrências, auditorias e cultura de prevenção."},
-    {id:"QUALITY", label:"QUALITY — Programa de Qualidade",               desc:"CEP, planos de controle, PFMEA, auditorias de qualidade implantados."},
-    {id:"ESSENCIA",label:"ESSENCIA — Programa de Excelência Operacional", desc:"Metodologia de excelência implantada com resultados mensuráveis."},
+    {id:"ZAT",     label:"ZAT — Segurança de Pessoas & Processo",          desc:"Segurança estruturada, análise de ocorrências, gestão de riscos e cultura de prevenção de acidentes."},
+    {id:"QUALITY", label:"QUALITY — Qualidade e Segurança de Alimentos",   desc:"Controle de qualidade do produto, planos APPCC, rastreabilidade e conformidade com normas alimentares."},
+    {id:"SIM",     label:"SIM — Manutenção",                               desc:"Gestão da manutenção preventiva e corretiva, disponibilidade de equipamentos e confiabilidade operacional."},
+    {id:"MA",      label:"MA — Meio Ambiente & Sustentabilidade",           desc:"Gestão ambiental, controle de efluentes, consumo de recursos e conformidade com legislação ambiental."},
+    {id:"COI",     label:"COI — Operações Integradas e Digitlização",       desc:"Integração dos processos operacionais, uso de sistemas digitais e automação para ganho de eficiência."},
+    {id:"IBP",     label:"IBP — Planejamento Integrado",                    desc:"Planejamento integrado de demanda, produção e supply chain alinhado às metas financeiras e comerciais."},
+    {id:"WMS_TMS", label:"WMS/TMS — Logística",                            desc:"Gestão de armazéns e transporte, rastreabilidade de movimentações e eficiência logística."},
+    {id:"GRO",     label:"GRO — Gestão da Rotina Operacional",             desc:"Reuniões estruturadas, quadros de gestão à vista e acompanhamento sistemático de indicadores operacionais."},
+    {id:"ESSENCIA",label:"ESSENCIA — Programa de Excelência Operacional",  desc:"Metodologia de excelência operacional implantada com indicadores e resultados mensuráveis."},
   ]},
   {nome:"Programas Transversais",progs:[
-    {id:"INOVAT",    label:"INOVA T — Inovação e Transformação",            desc:"Iniciativas estruturadas de inovação em processos ou modelos de gestão."},
-    {id:"BELTS",     label:"Formação de Belts",                             desc:"Capacitação em metodologias de melhoria (Green/Black Belt ou equivalentes)."},
-    {id:"5S",        label:"5S",                                            desc:"5S com padrões definidos, auditorias periódicas e sustentação pela liderança."},
-    {id:"MC",        label:"Melhoria Contínua",                             desc:"Ciclos Kaizen/PDCA/A3 com eventos realizados e resultados registrados."},
-    {id:"DIGITAL",   label:"Transformação Digital / IA",                    desc:"Ferramentas digitais para coleta de dados, automação ou apoio à decisão."},
-  ]},
-  {nome:"Cultura & Competências",progs:[
-    {id:"CULTURA", label:"Programa de Cultura",                             desc:"Valores definidos, rituais de reforço e métricas de engajamento ativos."},
-    {id:"UNIVT",   label:"Universidade Tirolez",                            desc:"Plataforma de educação corporativa ativa com trilhas e participação medida."},
-    {id:"COM",     label:"Comunicação",                                     desc:"Canais e rotinas de comunicação interna estruturados e com alcance medido."},
-    {id:"PDL",     label:"PDL — Programa de Desenvolvimento de Lideranças", desc:"Programa de desenvolvimento de líderes em execução com acompanhamento definido."},
+    {id:"INOVAT",  label:"INOVA T — Inovação e Transformação",             desc:"Iniciativas estruturadas de inovação em processos, produtos ou modelos de gestão."},
+    {id:"BELTS",   label:"Formação de Belts",                              desc:"Capacitação em metodologias de melhoria contínua (Green/Black Belt ou equivalentes)."},
+    {id:"5S",      label:"5S",                                             desc:"5S com padrões definidos, auditorias periódicas e sustentação ativa pela liderança."},
+    {id:"MC",      label:"Melhoria Contínua",                              desc:"Ciclos Kaizen/PDCA/A3 com eventos realizados, resultados registrados e cultura de melhoria."},
+    {id:"DIGITAL", label:"Transformação Digital",                          desc:"Ferramentas digitais para coleta de dados, automação de processos e apoio à tomada de decisão."},
   ]},
 ];
 const TODOS_PROGS=BLOCOS.flatMap(b=>b.progs);
